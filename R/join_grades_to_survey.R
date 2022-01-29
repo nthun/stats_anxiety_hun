@@ -15,4 +15,4 @@ hun_survey <-
     mutate(Q4.1 = str_to_upper(Q4.1)) %>% 
     full_join(hun_grades, by = "Q4.1")
 
-xlsx::write.xlsx("hungarian_data_w_grades.xlsx")
+xlsx::write.xlsx(hun_survey, "hungarian_data_w_grades.xlsx")
