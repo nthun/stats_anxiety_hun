@@ -4,7 +4,7 @@ library(qualtRics)
 library(labelled)
 library(gt)
 
-sussex_raw <- 
+statanx_raw <- 
     # Change file and path. File has to be a Qualtrics export in csv
     read_csv("data/hungarian_data_w_grades.csv") %>%
     # Drop all textual data from numeric variables, convert to numeric
