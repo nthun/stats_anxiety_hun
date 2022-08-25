@@ -1,4 +1,4 @@
-# Create map for 
+# Create map for data paper
 
 library(tidyverse)
 library(googlesheets4)
@@ -14,22 +14,26 @@ sanx_raw <-
     mutate(country = case_when(country == "Republic of Ireland" ~ "Ireland",
                            country %in% c("England", "Scotland", "Northern Ireland") ~ "UK",
                            TRUE ~ country))
+
+# Aggregate by country
 sanx_sum <- 
     sanx_raw %>% 
     count(country, sort = TRUE) %>% 
+    # Add N categories
     mutate(n_cat = cut(x = .$n,
                        breaks = c(0, 100, 200, 300, 400, 500, 1000, 2000, Inf),
                        labels = c("1-100", "101-200", "201-300", "301-400", 
                                   "401-500", "501-1000", "1001-2000", "2001+"), 
                        ordered_result = TRUE)) %>% 
+    # Add country codes and continent
     mutate(iso2c = countrycode(country, "country.name", "iso2c"),
            continent = countrycode(country, "country.name", "continent"))
-
 
 
 # Create visualization for sample size -----------------------------------------
 # Create map
 
+# Get world map
 map_data <- 
     map_data("world") %>% 
     as_tibble() %>% 
@@ -37,6 +41,7 @@ map_data <-
     filter(country != "Antarctica") %>% 
     left_join(sanx_sum, by = "country")
 
+# Plot map
 n_map <-
     map_data %>% 
     ggplot() +
@@ -53,11 +58,6 @@ n_map <-
     labs(fill = "Sample size")
 
 # Create treeplot
-
-paste(sanx_sum$iso2c, sanx_sum$country, sep = ": ") %>% 
-    paste(collapse = ", ") %>% 
-    write_lines("docs/country_codes.txt")
-
 n_treemap <- 
     sanx_sum %>% 
     ggplot() +
@@ -68,12 +68,16 @@ n_treemap <-
     scale_fill_viridis_d(option = "D", na.value = "grey90")
 
 # Aggregate plots into one
-
 n_map + n_treemap + 
     plot_layout(ncol = 1, heights = c(3,4), guides = "collect")
 
+# Country abbreviations for footnotes
+paste(sanx_sum$iso2c, sanx_sum$country, sep = ": ") %>% 
+    paste(collapse = ", ") %>% 
+    write_lines("docs/country_codes.txt")
 
 # Create table of universities -------------------------------------------------
+# Aggregate by university
 
 sanx_uni <-
     sanx_raw %>% 
@@ -81,6 +85,7 @@ sanx_uni <-
     mutate(continent = countrycode(country, "country.name", "continent")) %>% 
     arrange(continent, country, -n)
 
+# Create country labels with summarized N
 country_labels <-    
     sanx_raw %>% 
     count(country) %>%
