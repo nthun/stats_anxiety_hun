@@ -6,14 +6,15 @@ library(countrycode)
 library(treemapify)
 library(patchwork)
 library(gt)
+library(maps)
 
 sanx_raw <- 
     read_sheet("1kGPmvuBGTYaoDh8rIGWDyPBMNWCp8gekkqSevPyg7Zo", 
                        col_types = "c") %>% 
     # Rename subregions to respective country names
     mutate(country = case_when(country == "Republic of Ireland" ~ "Ireland",
-                           country %in% c("England", "Scotland", "Northern Ireland") ~ "UK",
-                           TRUE ~ country))
+                               country %in% c("England", "Scotland", "Northern Ireland") ~ "UK",
+                               TRUE ~ country))
 
 # Aggregate by country
 sanx_sum <- 
@@ -90,7 +91,7 @@ country_labels <-
     sanx_raw %>% 
     count(country) %>%
     transmute(country, 
-              country_label = paste0(country, "; N = ", n))
+              country_label = paste0(country, " (N = ", n, ")"))
 
 
 sanx_uni %>% 
