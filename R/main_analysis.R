@@ -5,7 +5,7 @@ library(semTools)  # for calculating Cronbach alpha
 
 
 
-data <- read.csv(file = "data/stat_anxiety_hun.csv")
+anxiety <- read.csv(file = "data/stat_anxiety_hun.csv")
 
 
 # II. PRELIMINARY ANALYSIS ------------------------------------------------
@@ -19,7 +19,7 @@ stars_tnc <- '
 test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
                   stars_13 + stars_15 + stars_21 + stars_22' 
 
-fit_stars_tnc <- cfa(stars_tnc, data = data, estimator = 'MLR')
+fit_stars_tnc <- cfa(stars_tnc, data = anxiety, estimator = 'MLR')
 stars_tnc_rel <- as.data.frame(reliability(fit_stars_tnc))
 
 
@@ -28,14 +28,14 @@ interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 +
                   stars_9 + stars_11 + stars_12 + stars_14 +
                   stars_17 + stars_18 + stars_20' 
 
-fit_stars_interpret <- cfa(stars_interpret, data = data, estimator = 'MLR')
+fit_stars_interpret <- cfa(stars_interpret, data = anxiety, estimator = 'MLR')
 stars_interpret_rel <- as.data.frame(reliability(fit_stars_interpret))
 
 
 stars_fear_of_asking <- '
 fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23' 
 
-fit_stars_fear_of_asking <- cfa(stars_fear_of_asking, data = data, estimator = 'MLR')
+fit_stars_fear_of_asking <- cfa(stars_fear_of_asking, data = anxiety, estimator = 'MLR')
 stars_fear_of_asking_rel <- as.data.frame(reliability(fit_stars_fear_of_asking))
 
 
@@ -135,7 +135,7 @@ testnclass ~~ fearask
 interpret ~~ fearask
 '
 
-fit_stars <- cfa(stars_corr_model_rel, data = data, estimator = 'MLR', std.lv = TRUE)
+fit_stars <- cfa(stars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
 
 
@@ -148,7 +148,7 @@ round(fitMeasures(fit_stars)["pvalue.scaled"], 3)
 
 # Revised Maths Anxiety Rating Scale  (R-MARS; Baloğlu & Zelhart,  --------
 
-colnames(data)
+colnames(anxiety)
 
 # 1. Internal consistency (alpha) calculation -----------------------------
 # calculating Cronbach alpha for STARS (item selection is based on Papousek et al., 2012)
@@ -156,21 +156,21 @@ rmars_mtest <- '
 mathtest =~ rmars_1 + rmars_2 + rmars_3 + rmars_4 + rmars_5 +  
             rmars_6 + rmars_7 + rmars_8 + rmars_9 + rmars_10' 
 
-fit_rmars_mtest <- cfa(rmars_mtest, data = data, estimator = 'MLR')
+fit_rmars_mtest <- cfa(rmars_mtest, data = anxiety, estimator = 'MLR')
 stars_mtest_rel <- as.data.frame(reliability(fit_rmars_mtest))
 
 
 rmars_ntest <- '
 numericaltest =~ rmars_11 + rmars_12 + rmars_13 + rmars_14 + rmars_15' 
 
-fit_rmars_ntest <- cfa(rmars_ntest, data = data, estimator = 'MLR')
+fit_rmars_ntest <- cfa(rmars_ntest, data = anxiety, estimator = 'MLR')
 rmars_ntest_rel <- as.data.frame(reliability(fit_rmars_ntest))
 
 
 rmars_mcourse <- '
 mathcourse =~ rmars_16 + rmars_17 + rmars_18 + rmars_19 + rmars_20' 
 
-fit_rmars_mcourse <- cfa(rmars_mcourse, data = data, estimator = 'MLR')
+fit_rmars_mcourse <- cfa(rmars_mcourse, data = anxiety, estimator = 'MLR')
 rmars_mcourse_rel <- as.data.frame(reliability(fit_rmars_mcourse))
 
 
@@ -267,7 +267,7 @@ mathtest ~~ mathcourse
 numtest ~~ mathcourse
 '
 
-fit_rmars <- cfa(rmars_corr_model_rel, data = data, estimator = 'MLR', std.lv = TRUE)
+fit_rmars <- cfa(rmars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
 
 
