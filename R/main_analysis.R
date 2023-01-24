@@ -536,3 +536,61 @@ round(fitMeasures(fit_rtas)[c("chisq.scaled", "df.scaled", "cfi.scaled", "tli.sc
                                "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", "srmr", "aic", "bic")], 3)
 round(fitMeasures(fit_rtas)["pvalue.scaled"], 3)
 
+
+
+
+# Brief Fear of Negative Evaluation Scale-Straightforward (BFNE-S; --------
+
+# 1. Internal consistency (alpha) calculation -----------------------------
+# calculating Cronbach alpha for BFNE-S (item selection is based on Carleton et al., 2011)
+bfnes <- '
+bfnes =~ bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8' 
+
+fit_bfnes <- cfa(bfnes, data = anxiety, estimator = 'MLR')
+bfnes_rel <- as.data.frame(reliability(fit_bfnes))
+
+# reliabilities_bfnes <- cbind(sticsa_som_rel, sticsa_cog_rel)
+reliabilities_bfnes2 <- round(bfnes_rel[1,], 3)
+
+
+
+# 2. Standardized Parameter Estimates from the correlational model ----------
+
+# calculating composite reliability, McDonald's omega
+
+# reliability check
+bfnes_corr_model_rel <- '
+# regressions
+
+bfnes =~ b1*bfne_1 + b2*bfne_2 + b3*bfne_3 + b4*bfne_4 + b5*bfne_5 + b6*bfne_6 + b7*bfne_7 + b8*bfne_8
+
+# Error Variance
+bfne_1~~eb1*bfne_1
+bfne_2~~eb2*bfne_2
+bfne_3~~eb3*bfne_3
+bfne_4~~eb4*bfne_4
+bfne_5~~eb5*bfne_5
+bfne_6~~eb6*bfne_6
+bfne_7~~eb7*bfne_7
+bfne_8~~eb8*bfne_8
+
+#Reliability
+omega.bfnes := 
+((b1 + b2 + b3 + b4 + b5 + b6 + b7 + b8)^2) 
+/ 
+((b1 + b2 + b3 + b4 + b5 + b6 + b7 + b8)^2 + 
+(eb1 + eb2 + eb3 + eb4 + eb5 + eb6 + eb7 + eb8))
+
+#Average Variance Extracted (AVE)
+ave_bfnes := 
+((b1^2) + (b2^2) + (b3^2) + (b4^2) + (b5^2) + (b6^2) + (b7^2) + (b8^2)) / 8
+'
+
+fit_bfnes <- cfa(bfnes_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
+summary(fit_bfnes, fit.measures = TRUE, standardized = TRUE, rsquare=T)
+
+
+# Fit indices
+round(fitMeasures(fit_bfnes)[c("chisq.scaled", "df.scaled", "cfi.scaled", "tli.scaled",
+                                "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", "srmr", "aic", "bic")], 3)
+round(fitMeasures(fit_bfnes)["pvalue.scaled"], 3)
