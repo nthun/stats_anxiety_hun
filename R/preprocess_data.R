@@ -120,7 +120,8 @@ anxiety <-
            # Remove presentation order variables
            -contains("_DO_"),
            # Remove alternate STAI, R-MARS variables
-           -matches("Q(7|8)\\.2_\\d+")) %>% 
+           # -matches("Q(7|8)\\.2_\\d+")
+           ) %>% 
     # Rename scales
     rename(id = Q4.2,
            university = Q5.1,
@@ -150,7 +151,10 @@ anxiety <-
            age = Q22.2,
            gender_ = starts_with("Q22.3"),
            spld_ = starts_with("Q22.5")
-           )
+           ) %>% 
+    mutate(stat_first = if_else(stat_now == "Yes" & is.na(stat_prev_1), 
+                         "First stat course", "Not first stat course"), 
+           .before = stat_now)
 
 write_excel_csv(anxiety, "data/stat_anxiety_hun.csv")
 
@@ -279,8 +283,5 @@ anxiety %>%
                                      parse_number(math_time_1)) 
     )
                                        
-c("4 hónapja", "1.5 év", "2 éve") %>% 
-    if_else(str_detect(., "év"), 
-            parse_number(.) * 12, 
-            parse_number(.)
-
+            
+            
