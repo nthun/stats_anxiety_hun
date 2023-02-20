@@ -109,6 +109,9 @@ anxiety <-
            !ResponseId %in% exclude_completion
         ) %>% 
     copy_labels_from(bp_raw, .strict = FALSE) %>% 
+    # There is only one other gender, that is FÉRFI (Male)
+    mutate(gender = if_else(Q22.3 == "Another gender (please specify)" , 
+                            "Male", Q22.3)) %>% 
     select(# Remove unimportant metadata
             -c(StartDate:Finished, DistributionChannel, UserLanguage, 
            # Remove consent question and id variable
@@ -119,8 +122,11 @@ anxiety <-
            -c(Q7.1_24, Q8.1_21, Q9.1_22, Q11.1_9, Q13.1_17, Q15.1_9, Q23.1),
            # Remove presentation order variables
            -contains("_DO_"),
+           # Remove original gender variables
+           -starts_with("Q22.3"),
            # Remove alternate STAI, R-MARS variables
-           -matches("Q(7|8)\\.2_\\d+")) %>% 
+           # -matches("Q(7|8)\\.2_\\d+")
+           ) %>% 
     # Rename scales
     rename(id = Q4.2,
            university = Q5.1,
@@ -148,13 +154,13 @@ anxiety <-
            stat_result_ = starts_with("Q20.3"),
            uni_year = Q22.1,
            age = Q22.2,
-           gender_ = starts_with("Q22.3"),
            spld_ = starts_with("Q22.5")
-           )
+           ) %>% 
+    mutate(stat_first = if_else(stat_now == "Yes" & is.na(stat_prev_1), 
+                         "First stat course", "Not first stat course"), 
+           .before = stat_now)
 
 write_excel_csv(anxiety, "data/stat_anxiety_hun.csv")
-
-
 
 # Exclusion table --------------------------------------------------------------
 
@@ -279,8 +285,4 @@ anxiety %>%
                                      parse_number(math_time_1)) 
     )
                                        
-c("4 hónapja", "1.5 év", "2 éve") %>% 
-    if_else(str_detect(., "év"), 
-            parse_number(.) * 12, 
-            parse_number(.)
 

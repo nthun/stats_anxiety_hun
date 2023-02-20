@@ -176,6 +176,7 @@ crt_3	On a loaf of bread, there is a patch of mould. Every day, the patch double
 god_belief	How strongly do you believe in God (or gods) (from 0-100)? 
 crt_check_1	You have just answered three reasoning problems. How many of them do you think you answered correctly? Please enter a number.
 crt_check_2	You have just answered three reasoning problems. Did you look any of the answers up online?
+stat_first  Currently studying for the first stat course.
 stat_now	Are you currently studying your first statistics course/module?
 stat_prev_1	Please provide the names of all university-level statistics modules that you have previously taken (i.e. not the module you're currently studying): - 1
 stat_prev_2	Please provide the names of all university-level statistics modules that you have previously taken (i.e. not the module you're currently studying): - 2
@@ -189,7 +190,6 @@ stat_result_4	Please provide your final number grade (e.g. 55, 62, 78) for each 
 stat_result_5	Please provide your final number grade (e.g. 55, 62, 78) for each university-level statistics module that you have previously taken
 uni_year	Which year of your degree course are you in?
 age	What is your age?
-gender_1	Please indicate your gender identity. - Selected Choice
-gender_2	Please indicate your gender identity. - Another gender (please specify) - Text
+gender	Please indicate your gender identity. - Selected Choice
 spld_1	Have you been diagnosed with any of the following Specific Learning Difficulties (SpLDs)? - Selected Choice
 spld_2	Have you been diagnosed with any of the following Specific Learning Difficulties (SpLDs)? - Other (please specify) - Text
