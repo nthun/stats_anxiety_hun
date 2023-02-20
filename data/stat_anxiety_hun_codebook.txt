@@ -170,13 +170,13 @@ patms_4	PATMS item (?-?): If I have trouble solving a problem, I'll try to get s
 patms_5	PATMS item (?-?): When I read something that doesn't make sense, I skip it and hope that it is explained in class.
 patms_6	PATMS item (?-?): When I run into a difficult problem, I keep working at it until I think I've solved it.
 patms_7	PATMS item (?-?): When I run into a difficult problem, I usually give up and go on to the next task.
-crt_1	The ages of Mark and Adam add up to 28 years total. Mark is 20 years older than Adam. How many years old is Adam? Please enter a number.
-crt_2	If it takes 10 seconds for 10 printers to print out 10 pages of paper, how many seconds will it take 50 printers to print out 50 pages of paper? Please enter a number.
-crt_3	On a loaf of bread, there is a patch of mould. Every day, the patch doubles in size. If it takes 40 days for the patch to cover the entire loaf of bread, how many days would it take for the patch to cover half of the loaf of bread? Please enter a number.
+crt_1	The ages of Mark and Adam add up to 28 years total. Mark is 20 years older than Adam. How many years old is Adam? Please enter a number. (Correct answer: 4)
+crt_2	If it takes 10 seconds for 10 printers to print out 10 pages of paper, how many seconds will it take 50 printers to print out 50 pages of paper? Please enter a number. (Correct answer: 10)
+crt_3	On a loaf of bread, there is a patch of mould. Every day, the patch doubles in size. If it takes 40 days for the patch to cover the entire loaf of bread, how many days would it take for the patch to cover half of the loaf of bread? Please enter a number. (Correct answer: 39)
 god_belief	How strongly do you believe in God (or gods) (from 0-100)? 
 crt_check_1	You have just answered three reasoning problems. How many of them do you think you answered correctly? Please enter a number.
 crt_check_2	You have just answered three reasoning problems. Did you look any of the answers up online?
-stat_first  Currently studying for the first stat course.
+stat_experience	Has experience with statistics or not? Calculated using statistics_now and RecordedDate.
 stat_now	Are you currently studying your first statistics course/module?
 stat_prev_1	Please provide the names of all university-level statistics modules that you have previously taken (i.e. not the module you're currently studying): - 1
 stat_prev_2	Please provide the names of all university-level statistics modules that you have previously taken (i.e. not the module you're currently studying): - 2

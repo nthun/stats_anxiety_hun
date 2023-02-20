@@ -4,6 +4,8 @@ library(qualtRics)
 library(labelled)
 library(gt)
 library(naniar)
+library(rvest)
+library(lubridate)
 
 # Read grade data --------------------------------------------------------------
 pecs_grades <- 
@@ -28,6 +30,13 @@ grades <-
     slice(1) %>% 
     ungroup() %>% 
     select(-n)
+
+# Solutions to the critical reasoning tasks
+solutions <- 
+    tribble(~task, ~solution,
+            "crt_1", 4,
+            "crt_2", 10,
+            "crt_3", 39)
 
 # Read survey data -------------------------------------------------------------
 bp_raw <-
@@ -156,9 +165,29 @@ anxiety <-
            age = Q22.2,
            spld_ = starts_with("Q22.5")
            ) %>% 
-    mutate(stat_first = if_else(stat_now == "Yes" & is.na(stat_prev_1), 
-                         "First stat course", "Not first stat course"), 
+    mutate(stat_experience = case_when(is.na(stat_now) ~ NA_character_,
+                                       stat_now == "Yes" & RecordedDate < date("2021-09-01") ~ "Experience with statistics", 
+                                       stat_now == "No" | RecordedDate >= date("2021-09-01") ~ "No statistics experience",
+                                       TRUE ~ NA_character_
+    ),
            .before = stat_now)
+
+correct_crt <- 
+    anxiety %>% 
+    select(ResponseId, crt_1:crt_3) %>% 
+    pivot_longer(crt_1:crt_3, names_to = "task", values_to = "answer") %>% 
+    left_join(solutions, by = "task") %>% 
+    mutate(correct = if_else(answer == solution, 1, 0)) %>% 
+    select(-solution, -answer) %>% 
+    pivot_wider(names_from = "task",
+                values_from = "correct", 
+                names_glue = "{task}_correct") %>% 
+    mutate(crt_sum_correct = crt_1_correct + crt_2_correct, crt_3_correct)
+
+anxiety <- 
+    anxiety %>% 
+    left_join(correct_crt, by = "ResponseId") %>% 
+    relocate(ends_with("correct"), .after = crt_3)
 
 write_excel_csv(anxiety, "data/stat_anxiety_hun.csv")
 
@@ -285,4 +314,16 @@ anxiety %>%
                                      parse_number(math_time_1)) 
     )
                                        
+# Translation of items
+
+clean_html <- function(string) {
+    return(gsub("<.*?>", "", string))
+}
+
+translations <-
+    read_csv(here::here("docs/Maths_Stats Anxiety Validity Survey - HUNGARIAN - ELTE-ALL.csv")) %>% 
+    slice(-1) %>% 
+    mutate(across(c(EN, HU), clean_html))
+
+write_excel_csv(translations, here::here("docs/translations_EN-HU.csv"))
 
