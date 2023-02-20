@@ -8,12 +8,16 @@ library(semTools)  # for calculating Cronbach alpha
 anxiety <- read.csv(file = "data/stat_anxiety_hun.csv")
 
 
-# II. PRELIMINARY ANALYSIS ------------------------------------------------
+
+## ---------------------------------------- 1. Preliminary analyses ---------------------------------
+
+## ----------------------- 1.1. Internal consistency (alpha) calculation ------------------
 
 
-# # Statistics Anxiety Rating Scale (STARS; Cruise et al., 1985) ----------
+# 1.1. Statistics Anxiety Rating Scale (STARS; Cruise et al., 1985) -------
 
-# 1. Internal consistency (alpha) calculation -----------------------------
+
+## Internal consistency (alpha) calculation -------------------------
 # calculating Cronbach alpha for STARS (item selection is based on Papousek et al., 2012)
 stars_tnc <- '
 test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
@@ -44,243 +48,303 @@ reliabilities_stars2 <- round(reliabilities_stars[1,], 3)
 
 
 
-# 2. Standardized Parameter Estimates from the correlational model ----------
+# STARS - The estimation of four alternative CFA solutions ----------------
+
+# (1) one-factor solution
+stars_onemodel <- '
+stars =~ stars_1 + stars_4 + stars_8 + stars_10 + 
+                  stars_13 + stars_15 + stars_21 + stars_22 +
+         stars_2 + stars_5 + stars_6 + stars_7 + 
+                  stars_9 + stars_11 + stars_12 + stars_14 +
+                  stars_17 + stars_18 + stars_20 +
+         stars_3 + stars_16 + stars_19 + stars_23' 
 
-# calculating composite reliability, McDonald's omega
+fit_stars_one <- cfa(stars_onemodel, data = anxiety, estimator = 'MLR')
+summary(fit_stars_one, fit.measures = TRUE, standardized = TRUE)
+round(fitMeasures(fit_stars_one)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                              "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                              "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                              "srmr")], 3)
+# Fit indices: (CFI = .701, TLI = .672, RMSEA = .119 [90% CI = 0.114 - 0.125]).
 
-# reliability check
-stars_corr_model_rel <- '
-# regressions
 
-testnclass =~ t1*stars_1 + t2*stars_4 + t3*stars_8 + t4*stars_10 + 
-                  t5*stars_13 + t6*stars_15 + t7*stars_21 + t8*stars_22 
 
-# Error Variance
-stars_1~~et1*stars_1
-stars_4~~et2*stars_4
-stars_8~~et3*stars_8
-stars_10~~et4*stars_10
-stars_13~~et5*stars_13
-stars_15~~et6*stars_15
-stars_21~~et7*stars_21
-stars_22~~et8*stars_22
+# (2) ﬁrst-order (including the 3 speciﬁc factors) solution
+stars_first_order_model <- '
+test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
+                  stars_13 + stars_15 + stars_21 + stars_22 
 
-#Reliability
-omega.test := 
-((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2) 
-/ 
-((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2 + 
-(et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8))
+interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 + 
+                  stars_9 + stars_11 + stars_12 + stars_14 +
+                  stars_17 + stars_18 + stars_20 
 
-#Average Variance Extracted (AVE)
-ave_t := 
-((t1^2) + (t2^2) + (t3^2) + (t4^2) + (t5^2) + (t6^2) + (t7^2) + (t8^2)) / 8
+fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23
 
+test_and_class ~~ interpretation
+test_and_class ~~ fear_of_asking
+interpretation ~~ fear_of_asking
+' 
+# In the three-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
+fit_stars_first <- cfa(stars_first_order_model, data = anxiety, estimator = 'MLR')
+summary(fit_stars_first, fit.measures = TRUE, standardized = TRUE)
+round(fitMeasures(fit_stars_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                   "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                   "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                   "srmr")], 3)
+# Fit indices: (CFI = .906, TLI = .895, RMSEA = .067 [90% CI = 0.061 - 0.074]).
 
-interpret =~ i1*stars_2 + i2*stars_5 + i3*stars_6 + i4*stars_7 + 
-             i5*stars_9 + i6*stars_11 + i7*stars_12 + i8*stars_14 +
-             i9*stars_17 + i10*stars_18 + i11*stars_20
 
-# Error Variance
-stars_2~~ei1*stars_2
-stars_5~~ei2*stars_5
-stars_6~~ei3*stars_6
-stars_7~~ei4*stars_7
-stars_9~~ei5*stars_9
-stars_11~~ei6*stars_11
-stars_12~~ei7*stars_12
-stars_14~~ei8*stars_14
-stars_17~~ei9*stars_17
-stars_18~~ei10*stars_18
-stars_20~~ei11*stars_20
 
-#Reliability
-omega.interpret := 
-((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2) 
-/ 
-((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2 + 
-(ei1 + ei2 + ei3 + ei4 + ei5 + ei6 + ei7 + ei8 + ei9 + ei10 + ei11))
+# (3)  second-order (including the 3 speciﬁc factors and a higher-order stat anxiety factor)
+stars_second_order_model <- '
+stat_anxiety =~ test_and_class + interpretation + fear_of_asking
 
-#Average Variance Extracted (AVE)
-ave_i := 
-((i1^2) + (i2^2) + (i3^2) + (i4^2) + (i5^2) + (i6^2) + (i7^2) + (i8^2) + (i9^2) + (i10^2) + (i11^2)) / 11
+test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
+                  stars_13 + stars_15 + stars_21 + stars_22 
 
+interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 + 
+                  stars_9 + stars_11 + stars_12 + stars_14 +
+                  stars_17 + stars_18 + stars_20 
 
+fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23' 
+# In the second-order model, speciﬁcations were the same as in the ﬁrst-order model, but the correlations between the factors were replaced by a second-order global statistics anxiety factor.
 
-fearask =~ f1*stars_3 + f2*stars_16 + f3*stars_19 + f4*stars_23 
+fit_stars_second <- cfa(stars_second_order_model, data = anxiety, estimator = 'MLR')
+summary(fit_stars_second, fit.measures = TRUE, standardized = TRUE)
+round(fitMeasures(fit_stars_second)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                     "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                     "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                     "srmr")], 3)
+# Fit indices: (CFI = .906, TLI = .895, RMSEA = .067 [90% CI = 0.061 - 0.074]).
 
-# Error Variance
-stars_3~~ef1*stars_3
-stars_16~~ef2*stars_16
-stars_19~~ef3*stars_19
-stars_23~~ef4*stars_23
 
-#Reliability
-omega.fear := 
-((f1 + f2 + f3 + f4)^2) 
-/ 
-((f1 + f2 + f3 + f4)^2 + 
-(ef1 + ef2 + ef3 + ef4))
 
-#Average Variance Extracted (AVE)
-ave_t := 
-((f1^2) + (f2^2) + (f3^2) + (f4^2)) / 4
+# (4) bifactor solution (including the 3 speciﬁc factors and a co-existing stat anxiety factor)
+stars_bifactor_model <- '
+test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
+                  stars_13 + stars_15 + stars_21 + stars_22 
 
+interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 + 
+                  stars_9 + stars_11 + stars_12 + stars_14 +
+                  stars_17 + stars_18 + stars_20 
 
+fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23
 
-# correlations
-testnclass ~~ interpret
-testnclass ~~ fearask
-interpret ~~ fearask
-'
+stat_anxiety =~ stars_1 + stars_2 + stars_3 + stars_4 + stars_5 + stars_6 + stars_7 + stars_8 + stars_9 + stars_10 + 
+                stars_11 + stars_12 + stars_13 + stars_14 + stars_15 + stars_16 + stars_17 + stars_18 + stars_19 + 
+                stars_20 + stars_21 + stars_22 + stars_23
 
-fit_stars <- cfa(stars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
-summary(fit_stars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
+stat_anxiety    ~~ 1*stat_anxiety
+test_and_class  ~~ 1*test_and_class
+interpretation  ~~ 1*interpretation
+fear_of_asking  ~~ 1*fear_of_asking'
 
+# In bifactor-CFA solution, items were set to load on their respective S-factors as well as on the statistics anxiety G-factor, 
+# and following typical bifactor speciﬁcations (Reise, 2012) factors were speciﬁed as orthogonal (i.e., not allowed to correlate with one another).
 
-# Fit indices
-round(fitMeasures(fit_stars)[c("chisq.scaled", "df.scaled", "cfi.scaled", "tli.scaled",
-                               "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", "srmr", "aic", "bic")], 3)
-round(fitMeasures(fit_stars)["pvalue.scaled"], 3)
+fit_stars_bifactor <- cfa(stars_bifactor_model, data = anxiety, estimator = 'MLR')
+summary(fit_stars_bifactor, fit.measures = TRUE, standardized = TRUE)
+round(fitMeasures(fit_stars_bifactor)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                      "srmr")], 3)
+# Fit indices: (CFI = .951, TLI = .940, RMSEA = .051 [90% CI = 0.044 - 0.058]).
 
 
 
-# Revised Maths Anxiety Rating Scale  (R-MARS; Baloğlu & Zelhart,  --------
 
-colnames(anxiety)
+# In the comparison of ﬁrst-order and bifactor models, we followed 
+# the guidelines of Morin et al. (2016a) and apart from goodness-of-ﬁt, 
+# we also carefully examined the standardized parameter estimates 
+# with an emphasis on the size of the correlations between the factors.
 
-# 1. Internal consistency (alpha) calculation -----------------------------
-# calculating Cronbach alpha for R-MARS (item selection is based on XXXX)
-rmars_mtest <- '
-mathtest =~ rmars_1 + rmars_2 + rmars_3 + rmars_4 + rmars_5 +  
-            rmars_6 + rmars_7 + rmars_8 + rmars_9 + rmars_10' 
 
-fit_rmars_mtest <- cfa(rmars_mtest, data = anxiety, estimator = 'MLR')
-stars_mtest_rel <- as.data.frame(reliability(fit_rmars_mtest))
-
-
-rmars_ntest <- '
-numericaltest =~ rmars_11 + rmars_12 + rmars_13 + rmars_14 + rmars_15' 
-
-fit_rmars_ntest <- cfa(rmars_ntest, data = anxiety, estimator = 'MLR')
-rmars_ntest_rel <- as.data.frame(reliability(fit_rmars_ntest))
-
-
-rmars_mcourse <- '
-mathcourse =~ rmars_16 + rmars_17 + rmars_18 + rmars_19 + rmars_20' 
-
-fit_rmars_mcourse <- cfa(rmars_mcourse, data = anxiety, estimator = 'MLR')
-rmars_mcourse_rel <- as.data.frame(reliability(fit_rmars_mcourse))
-
-
-reliabilities_rmars <- cbind(stars_mtest_rel, rmars_ntest_rel, rmars_mcourse_rel)
-reliabilities_rmars2 <- round(reliabilities_rmars[1,], 3)
-
-
-
-# 2. Standardized Parameter Estimates from the correlational model ----------
-
-# calculating composite reliability, McDonald's omega
-
-# reliability check
-rmars_corr_model_rel <- '
-# regressions
-
-mathtest =~ mt1*rmars_1 + mt2*rmars_2 + mt3*rmars_3 + mt4*rmars_4 + mt5*rmars_5 +  
-            mt6*rmars_6 + mt7*rmars_7 + mt8*rmars_8 + mt9*rmars_9 + mt10*rmars_10
-
-# Error Variance
-rmars_1~~emt1*rmars_1
-rmars_2~~emt2*rmars_2
-rmars_3~~emt3*rmars_3
-rmars_4~~emt4*rmars_4
-rmars_5~~emt5*rmars_5
-rmars_6~~emt6*rmars_6
-rmars_7~~emt7*rmars_7
-rmars_8~~emt8*rmars_8
-rmars_9~~emt9*rmars_9
-rmars_10~~emt10*rmars_10
-
-#Reliability
-omega.mtest := 
-((mt1 + mt2 + mt3 + mt4 + mt5 + mt6 + mt7 + mt8 + mt9 + mt10)^2) 
-/ 
-((mt1 + mt2 + mt3 + mt4 + mt5 + mt6 + mt7 + mt8 + mt9 + mt10)^2 + 
-(emt1 + emt2 + emt3 + emt4 + emt5 + emt6 + emt7 + emt8 + emt9 + emt10))
-
-#Average Variance Extracted (AVE)
-ave_t := 
-((mt1^2) + (mt2^2) + (mt3^2) + (mt4^2) + (mt5^2) + 
-(mt6^2) + (mt7^2) + (mt8^2) + (mt9^2) + (mt10^2)) / 10
-
-
-
-numtest =~ n1*rmars_11 + n2*rmars_12 + n3*rmars_13 + n4*rmars_14 + n5*rmars_15
-
-# Error Variance
-rmars_11~~en1*rmars_11
-rmars_12~~en2*rmars_12
-rmars_13~~en3*rmars_13
-rmars_14~~en4*rmars_14
-rmars_15~~en5*rmars_15
-
-
-#Reliability
-omega.ntest := 
-((n1 + n2 + n3 + n4 + n5)^2) 
-/ 
-((n1 + n2 + n3 + n4 + n5)^2 + 
-(en1 + en2 + en3 + en4 + en5))
-
-#Average Variance Extracted (AVE)
-ave_n := 
-((n1^2) + (n2^2) + (n3^2) + (n4^2) + (n5^2)) / 5
-
-
-
-mathcourse =~ c1*rmars_16 + c2*rmars_17 + c3*rmars_18 + c4*rmars_19 + c5*rmars_20 
-
-# Error Variance
-rmars_16~~ec1*rmars_16
-rmars_17~~ec2*rmars_17
-rmars_18~~ec3*rmars_18
-rmars_19~~ec4*rmars_19
-rmars_20~~ec5*rmars_20
-
-#Reliability
-omega.mcourse := 
-((c1 + c2 + c3 + c4 + c5)^2) 
-/ 
-((c1 + c2 + c3 + c4 + c5)^2 + 
-(ec1 + ec2 + ec3 + ec4 + ec5))
-
-#Average Variance Extracted (AVE)
-ave_mc := 
-((c1^2) + (c2^2) + (c3^2) + (c4^2) + (c5^2)) / 5
-
-
-
-# correlations
-mathtest ~~ numtest
-mathtest ~~ mathcourse
-numtest ~~ mathcourse
-'
-
-fit_rmars <- cfa(rmars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
-summary(fit_rmars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-
-
-# Fit indices
-round(fitMeasures(fit_rmars)[c("chisq.scaled", "df.scaled", "cfi.scaled", "tli.scaled",
-                               "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", "srmr", "aic", "bic")], 3)
-round(fitMeasures(fit_rmars)["pvalue.scaled"], 3)
-
-
-
-# State-Trait Inventory for Cognitive and Somatic Anxiety (STICSA; --------
-
-# 1. Internal consistency (alpha) calculation -----------------------------
+# Measurement Invariance Testing ------------------------------------------
+
+# Testing measurement invariance for genders
+library(dplyr)
+anxiety2 <- anxiety %>%
+    mutate(gender = case_when(!is.na(gender_1) & gender_1 == "Female" ~ "1",
+                              !is.na(gender_1) & gender_1 == "Male" ~ "2",
+                                TRUE ~ "0")) %>%
+    filter(gender %in% c(1, 2))
+table(anxiety2$gender)
+
+config_gender <- cfa(stars_bifactor_model, data = anxiety2, group = "gender", estimator = 'MLR')
+weak_gender <- cfa(stars_bifactor_model, data = anxiety2, group = "gender", estimator = 'MLR', group.equal = "loadings")
+strong_gender <- cfa(stars_bifactor_model, data = anxiety2, group = "gender", estimator = 'MLR', group.equal = c("loadings", "intercepts"))
+strict_gender <- cfa(stars_bifactor_model, data = anxiety2, group = "gender", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals"))
+anova(config_gender, weak_gender, strong_gender, strict_gender)
+
+
+fit.stats_gender <- rbind(fitmeasures(config_gender, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(weak_gender, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(strong_gender, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(strict_gender, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")))
+rownames(fit.stats_gender) <- c("config", "weak", "strong", "strict")
+fit.stats_gender
+
+
+
+# Testing measurement invariance for universities
+table(anxiety$university)
+
+
+config_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR')
+weak_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = "loadings")
+strong_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts"))
+strict_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals"))
+anova(config_uni, weak_uni, strong_uni, strict_uni)
+
+
+fit.stats_uni <- rbind(fitmeasures(config_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(weak_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(strong_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                          fitmeasures(strict_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")))
+rownames(fit.stats_uni) <- c("config", "weak", "strong", "strict")
+fit.stats_uni
+
+
+
+# Testing measurement invariance for universities
+table(anxiety$stat_now, useNA = "always")
+anxiety2 <- anxiety2 %>%
+    mutate(stat_now2 = case_when(!is.na(stat_now) & stat_now == "No" ~ "1",
+                              !is.na(stat_now) & stat_now == "Yes" ~ "2",
+                              TRUE ~ "0")) %>%
+    filter(gender %in% c(1, 2))
+table(anxiety2$stat_now)
+
+
+config_stat <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_now2", estimator = 'MLR')
+weak_stat <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_now2", estimator = 'MLR', group.equal = "loadings")
+strong_stat <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_now2", estimator = 'MLR', group.equal = c("loadings", "intercepts"))
+strict_stat <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_now2", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals"))
+anova(config_stat, weak_stat, strong_stat, strict_stat)
+
+
+fit.stats_stat <- rbind(fitmeasures(config_stat, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                       fitmeasures(weak_stat, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                       fitmeasures(strong_stat, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
+                       fitmeasures(strict_stat, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")))
+rownames(fit.stats_stat) <- c("config", "weak", "strong", "strict")
+fit.stats_stat
+
+
+
+
+# 
+# # STARS McDonald's omega calculation
+# ## Standardized Parameter Estimates from the correlational m --------
+# 
+# # calculating composite reliability, McDonald's omega
+# 
+# # reliability check
+# stars_corr_model_rel <- '
+# # regressions
+# 
+# testnclass =~ t1*stars_1 + t2*stars_4 + t3*stars_8 + t4*stars_10 + 
+#                   t5*stars_13 + t6*stars_15 + t7*stars_21 + t8*stars_22 
+# 
+# # Error Variance
+# stars_1~~et1*stars_1
+# stars_4~~et2*stars_4
+# stars_8~~et3*stars_8
+# stars_10~~et4*stars_10
+# stars_13~~et5*stars_13
+# stars_15~~et6*stars_15
+# stars_21~~et7*stars_21
+# stars_22~~et8*stars_22
+# 
+# #Reliability
+# omega.test := 
+# ((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2) 
+# / 
+# ((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2 + 
+# (et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8))
+# 
+# #Average Variance Extracted (AVE)
+# ave_t := 
+# ((t1^2) + (t2^2) + (t3^2) + (t4^2) + (t5^2) + (t6^2) + (t7^2) + (t8^2)) / 8
+# 
+# 
+# 
+# interpret =~ i1*stars_2 + i2*stars_5 + i3*stars_6 + i4*stars_7 + 
+#              i5*stars_9 + i6*stars_11 + i7*stars_12 + i8*stars_14 +
+#              i9*stars_17 + i10*stars_18 + i11*stars_20
+# 
+# # Error Variance
+# stars_2~~ei1*stars_2
+# stars_5~~ei2*stars_5
+# stars_6~~ei3*stars_6
+# stars_7~~ei4*stars_7
+# stars_9~~ei5*stars_9
+# stars_11~~ei6*stars_11
+# stars_12~~ei7*stars_12
+# stars_14~~ei8*stars_14
+# stars_17~~ei9*stars_17
+# stars_18~~ei10*stars_18
+# stars_20~~ei11*stars_20
+# 
+# #Reliability
+# omega.interpret := 
+# ((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2) 
+# / 
+# ((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2 + 
+# (ei1 + ei2 + ei3 + ei4 + ei5 + ei6 + ei7 + ei8 + ei9 + ei10 + ei11))
+# 
+# #Average Variance Extracted (AVE)
+# ave_i := 
+# ((i1^2) + (i2^2) + (i3^2) + (i4^2) + (i5^2) + (i6^2) + (i7^2) + (i8^2) + (i9^2) + (i10^2) + (i11^2)) / 11
+# 
+# 
+# 
+# fearask =~ f1*stars_3 + f2*stars_16 + f3*stars_19 + f4*stars_23 
+# 
+# # Error Variance
+# stars_3~~ef1*stars_3
+# stars_16~~ef2*stars_16
+# stars_19~~ef3*stars_19
+# stars_23~~ef4*stars_23
+# 
+# #Reliability
+# omega.fear := 
+# ((f1 + f2 + f3 + f4)^2) 
+# / 
+# ((f1 + f2 + f3 + f4)^2 + 
+# (ef1 + ef2 + ef3 + ef4))
+# 
+# #Average Variance Extracted (AVE)
+# ave_t := 
+# ((f1^2) + (f2^2) + (f3^2) + (f4^2)) / 4
+# 
+# 
+# 
+# # correlations
+# testnclass ~~ interpret
+# testnclass ~~ fearask
+# interpret ~~ fearask
+# '
+# 
+# fit_stars <- cfa(stars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
+# summary(fit_stars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
+# 
+# 
+# # Fit indices
+# round(fitMeasures(fit_stars)[c("chisq.scaled", "df.scaled", "cfi.scaled", "tli.scaled",
+#                                "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", "srmr", "aic", "bic")], 3)
+# round(fitMeasures(fit_stars)["pvalue.scaled"], 3)
+
+
+
+
+
+
+
+# 1.2. State-Trait Inventory for Cog. and Som. Anxiety (STICSA) -----------
+
+## Internal consistency (alpha) calculation -------------------------
 # calculating Cronbach alpha for STICSA (item selection is based on Ree et al., 2008)
 sticsa_som <- '
 somatic =~ sticsa_1 + sticsa_2 + sticsa_6 + sticsa_7 + sticsa_8 + 
@@ -303,10 +367,9 @@ reliabilities_sticsa2 <- round(reliabilities_sticsa[1,], 3)
 
 
 
-# 2. Standardized Parameter Estimates from the correlational model ----------
+## Standardized Parameter Estimates from the correlational m --------
 
 # calculating composite reliability, McDonald's omega
-
 # reliability check
 sticsa_corr_model_rel <- '
 # regressions
@@ -384,9 +447,10 @@ round(fitMeasures(fit_sticsa)["pvalue.scaled"], 3)
 
 
 
-# Revised Test Anxiety Scale (R-TAS; Benson & El‐Zahhar, 1994 -------------
+# 1.3. Revised Test Anxiety Scale (R-TAS) ---------------------------------
 
-# 1. Internal consistency (alpha) calculation -----------------------------
+
+## Internal consistency (alpha) calculation -------------------------
 # calculating Cronbach alpha for R-TAS (item selection is based on Benson & El‐Zahhar, 1994)
 rtas_wor <- '
 worry =~ rtas_1 + rtas_2 + rtas_3 + rtas_8 + rtas_11 + rtas_24' 
@@ -422,8 +486,7 @@ reliabilities_rtas2 <- round(reliabilities_rtas[1,], 3)
 
 
 
-# 2. Standardized Parameter Estimates from the correlational model ----------
-
+## Standardized Parameter Estimates from the correlational m --------
 # calculating composite reliability, McDonald's omega
 
 # reliability check
@@ -539,9 +602,12 @@ round(fitMeasures(fit_rtas)["pvalue.scaled"], 3)
 
 
 
-# Brief Fear of Negative Evaluation Scale-Straightforward (BFNE-S; --------
+# 1.4. Brief Fear of Negative Eval. Scale-Straightforward (BFNE-S) --------
 
-# 1. Internal consistency (alpha) calculation -----------------------------
+
+## Internal consistency (alpha) calculation ----------------------------
+
+
 # calculating Cronbach alpha for BFNE-S (item selection is based on Carleton et al., 2011)
 bfnes <- '
 bfnes =~ bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8' 
@@ -554,10 +620,9 @@ reliabilities_bfnes2 <- round(bfnes_rel[1,], 3)
 
 
 
-# 2. Standardized Parameter Estimates from the correlational model ----------
+## Standardized Parameter Estimates from the correlational ----------
 
 # calculating composite reliability, McDonald's omega
-
 # reliability check
 bfnes_corr_model_rel <- '
 # regressions
