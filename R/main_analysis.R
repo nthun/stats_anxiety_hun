@@ -1,7 +1,7 @@
 
 # loading packages
-library(lavaan) # for calculating Cronbach alpha
-library(semTools)  # for calculating Cronbach alpha and measurement invariance
+library(lavaan) # for calculating Cronbach alpha, McDonald's omega, CFA, Measurement Invariance, correlations
+library(semTools)  # for calculating Cronbach alpha
 library(tidyverse)
 
 
