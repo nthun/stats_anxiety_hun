@@ -466,7 +466,6 @@ rmars_one =~ rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 +
     rmars_41 + rmars_42 + rmars_43 + rmars_44 +
     
     rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40' 
-# In the three-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
 fit_rmars_one <- cfa(rmars_one_factor_model, data = anxiety, estimator = 'WLSMV')
 summary(fit_rmars_one, fit.measures = TRUE, standardized = TRUE)
@@ -501,7 +500,7 @@ round(fitMeasures(fit_rmars_second)[c("npar", "chisq.scaled", "df.scaled", "pval
 
 
 # (4) bifactor solution ---------------------------------------------------
-# (including the 3 speciﬁc factors and a co-existing stat anxiety factor)
+# (including the 3 speciﬁc factors and a co-existing math anxiety factor)
 rmars_bifactor_model <- '
 math_test_anx =~ rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 + 
     rmars_26 + rmars_27 + rmars_28 + rmars_29 + rmars_30
