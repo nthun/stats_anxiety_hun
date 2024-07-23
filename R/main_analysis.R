@@ -7,7 +7,6 @@ library(tidyverse)
 
 anxiety <- read_csv(file = "data/stat_anxiety_hun.csv")
 
-
 ## ---------------------------------------- Preliminary analyses ---------------------------------
 
 # 1. Internal consistency (alpha) calculation ---------------------------
@@ -18,7 +17,7 @@ sticsa_som <- '
 somatic =~ sticsa_1 + sticsa_2 + sticsa_6 + sticsa_7 + sticsa_8 + 
            sticsa_12 + sticsa_14 + sticsa_15 + sticsa_18 + sticsa_20 + sticsa_21' 
 
-fit_sticsa_som <- cfa(sticsa_som, data = anxiety, estimator = 'WLSMV')
+fit_sticsa_som <- cfa(sticsa_som, data = anxiety, estimator = 'MLR')
 sticsa_som_rel <- as.data.frame(reliability(fit_sticsa_som))
 
 
@@ -26,7 +25,7 @@ sticsa_cog <- '
 cognitive =~ sticsa_3 + sticsa_4 + sticsa_5 + sticsa_9 + sticsa_10 + 
              sticsa_11 + sticsa_13 + sticsa_16 + sticsa_17 + sticsa_19' 
 
-fit_sticsa_cog <- cfa(sticsa_cog, data = anxiety, estimator = 'WLSMV')
+fit_sticsa_cog <- cfa(sticsa_cog, data = anxiety, estimator = 'MLR')
 sticsa_cog_rel <- as.data.frame(reliability(fit_sticsa_cog))
 
 
@@ -41,28 +40,28 @@ reliabilities_sticsa2 <- round(reliabilities_sticsa[1,], 3)
 rtas_wor <- '
 worry =~ rtas_1 + rtas_2 + rtas_3 + rtas_8 + rtas_11 + rtas_24' 
 
-fit_rtas_wor <- cfa(rtas_wor, data = anxiety, estimator = 'WLSMV')
+fit_rtas_wor <- cfa(rtas_wor, data = anxiety, estimator = 'MLR')
 rtas_wor_rel <- as.data.frame(reliability(fit_rtas_wor))
 
 
 rtas_ten <- '
 tension =~ rtas_4 + rtas_5 + rtas_6 + rtas_13 + rtas_25' 
 
-fit_rtas_ten <- cfa(rtas_ten, data = anxiety, estimator = 'WLSMV')
+fit_rtas_ten <- cfa(rtas_ten, data = anxiety, estimator = 'MLR')
 rtas_ten_rel <- as.data.frame(reliability(fit_rtas_ten))
 
 
 rtas_irr <- '
 irrelevant =~ rtas_7 + rtas_9 + rtas_15 + rtas_16' 
 
-fit_rtas_irr <- cfa(rtas_irr, data = anxiety, estimator = 'WLSMV')
+fit_rtas_irr <- cfa(rtas_irr, data = anxiety, estimator = 'MLR')
 rtas_irr_rel <- as.data.frame(reliability(fit_rtas_irr))
 
 
 rtas_bod <- '
 bodily =~ rtas_10 + rtas_17 + rtas_18 + rtas_21 + rtas_22' 
 
-fit_rtas_bod <- cfa(rtas_bod, data = anxiety, estimator = 'WLSMV')
+fit_rtas_bod <- cfa(rtas_bod, data = anxiety, estimator = 'MLR')
 rtas_bod_rel <- as.data.frame(reliability(fit_rtas_bod))
 
 
@@ -77,7 +76,7 @@ reliabilities_rtas2 <- round(reliabilities_rtas[1,], 3)
 bfnes <- '
 bfnes =~ bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8' 
 
-fit_bfnes <- cfa(bfnes, data = anxiety, estimator = 'WLSMV')
+fit_bfnes <- cfa(bfnes, data = anxiety, estimator = 'MLR')
 bfnes_rel <- as.data.frame(reliability(fit_bfnes))
 
 # reliabilities_bfnes <- cbind(sticsa_som_rel, sticsa_cog_rel)
@@ -91,7 +90,7 @@ rmars_mta <- '
 math_test_anx =~ rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 + 
                   rmars_26 + rmars_27 + rmars_28 + rmars_29 + rmars_30' 
 
-fit_rmars_mta <- cfa(rmars_mta, data = anxiety, estimator = 'WLSMV')
+fit_rmars_mta <- cfa(rmars_mta, data = anxiety, estimator = 'MLR')
 rmars_mta_rel <- as.data.frame(reliability(fit_rmars_mta))
 
 
@@ -99,14 +98,14 @@ rmars_nta <- '
 num_task_anx =~ rmars_31 + rmars_32 + rmars_33 + rmars_34 + rmars_35 + 
                 rmars_41 + rmars_42 + rmars_43 + rmars_44'
 
-fit_rmars_nta <- cfa(rmars_nta, data = anxiety, estimator = 'WLSMV')
+fit_rmars_nta <- cfa(rmars_nta, data = anxiety, estimator = 'MLR')
 rmars_nta_rel <- as.data.frame(reliability(fit_rmars_nta))
 
 
 rmars_mca <- '
 math_class_anx =~ rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40' 
 
-fit_rmars_mca <- cfa(rmars_mca, data = anxiety, estimator = 'WLSMV')
+fit_rmars_mca <- cfa(rmars_mca, data = anxiety, estimator = 'MLR')
 rmars_mca_rel <- as.data.frame(reliability(fit_rmars_mca))
 
 
@@ -121,7 +120,7 @@ stars_tnc <- '
 test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
                   stars_13 + stars_15 + stars_21 + stars_22' 
 
-fit_stars_tnc <- cfa(stars_tnc, data = anxiety, estimator = 'WLSMV')
+fit_stars_tnc <- cfa(stars_tnc, data = anxiety, estimator = 'MLR')
 stars_tnc_rel <- as.data.frame(reliability(fit_stars_tnc))
 
 
@@ -130,14 +129,14 @@ interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 +
                   stars_9 + stars_11 + stars_12 + stars_14 +
                   stars_17 + stars_18 + stars_20' 
 
-fit_stars_interpret <- cfa(stars_interpret, data = anxiety, estimator = 'WLSMV')
+fit_stars_interpret <- cfa(stars_interpret, data = anxiety, estimator = 'MLR')
 stars_interpret_rel <- as.data.frame(reliability(fit_stars_interpret))
 
 
 stars_fear_of_asking <- '
 fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23' 
 
-fit_stars_fear_of_asking <- cfa(stars_fear_of_asking, data = anxiety, estimator = 'WLSMV')
+fit_stars_fear_of_asking <- cfa(stars_fear_of_asking, data = anxiety, estimator = 'MLR')
 stars_fear_of_asking_rel <- as.data.frame(reliability(fit_stars_fear_of_asking))
 
 
@@ -171,16 +170,16 @@ cognitive =~ sticsa_3 + sticsa_4 + sticsa_5 + sticsa_9 + sticsa_10 +
 
 somatic ~~ cognitive
 ' 
+
 # In the two-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
-fit_sticsa_first <- cfa(sticsa_first_order_model, data = anxiety, estimator = 'WLSMV')
+fit_sticsa_first <- cfa(sticsa_first_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_sticsa_first, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_sticsa_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 328.675* (188), CFI = .951, TLI = .946, RMSEA = .045 [90% CI = 0.037 - 0.053]).
-
+# Fit indices: (chisq.scaled = 397.870* (188), CFI = .916, TLI = .906, RMSEA = .055 [90% CI = 0.048 - 0.062]).
 
 
 # 2.1.2 STICSA composite reliability --------------------------------------------
@@ -243,11 +242,10 @@ omega.cog :=
 somatic ~~ cognitive
 '
 
-fit_sticsa <- cfa(sticsa_corr_model_rel, data = anxiety, estimator = 'WLSMV', std.lv = TRUE)
+fit_sticsa <- cfa(sticsa_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_sticsa, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.som = 0.862
+# omega.som = 0.864
 # omega.cog = 0.874
-
 
 
 
@@ -273,14 +271,13 @@ irrelevant ~~ bodily
 ' 
 # In the four-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
-fit_rtas_first <- cfa(rtas_first_order_model, data = anxiety, estimator = 'WLSMV')
+fit_rtas_first <- cfa(rtas_first_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rtas_first, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_rtas_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 246.029* (164), CFI = .963, TLI = .957, RMSEA = .037 [90% CI = 0.027 - 0.046]).
-
+# Fit indices: (chisq.scaled = 272.694* (164), CFI = .960, TLI = .953, RMSEA = .042 [90% CI = 0.034 - 0.051]).
 
 
 # 2.2.2 R-TAS composite reliability ---------------------------------------
@@ -371,13 +368,12 @@ tension ~~ bodily
 irrelevant ~~ bodily
 '
 
-fit_rtas <- cfa(rtas_corr_model_rel, data = anxiety, estimator = 'WLSMV', std.lv = TRUE)
+fit_rtas <- cfa(rtas_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rtas, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.wor = 0.835
-# omega.ten = 0.876
+# omega.wor = 0.836
+# omega.ten = 0.880
 # omega.irr = 0.776
-# omega.bod = 0.750
-
+# omega.bod = 0.751
 
 
 # 2.3. Brief Fear of Negative Eval. Scale-Straightforward (BFNE-S) --------
@@ -386,14 +382,13 @@ summary(fit_rtas, fit.measures = TRUE, standardized = TRUE, rsquare=T)
 bfnes <- '
 bfnes =~ bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8' 
 
-fit_bfnes_one <- cfa(bfnes, data = anxiety, estimator = 'WLSMV')
+fit_bfnes_one <- cfa(bfnes, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_bfnes_one, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_bfnes_one)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                   "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                   "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                   "srmr")], 3)
-# Fit indices: (chisq.scaled = 52.446* (20), CFI = .983, TLI = .976, RMSEA = .066 [90% CI = 0.045 - 0.089]).
-
+# Fit indices: (chisq.scaled = 80.497* (20), CFI = .969, TLI = .957, RMSEA = .090 [90% CI = 0.072 - 0.109]).
 
 
 # 2.3.2 BFNE-S composite reliability ---------------------------------------
@@ -423,10 +418,9 @@ omega.bfnes :=
 (eb1 + eb2 + eb3 + eb4 + eb5 + eb6 + eb7 + eb8))
 '
 
-fit_bfnes <- cfa(bfnes_corr_model_rel, data = anxiety, estimator = 'WLSMV', std.lv = TRUE)
+fit_bfnes <- cfa(bfnes_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_bfnes, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.bfnes = 0.951
-
+# omega.bfnes = 0.950
 
 
 # 2.4 Revised Maths Anxiety Rating Scale (Baloğlu&Zelhart (2007) ----------
@@ -448,14 +442,13 @@ num_task_anx ~~ math_class_anx
 ' 
 # In the three-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
-fit_rmars_first <- cfa(rmars_first_order_model, data = anxiety, estimator = 'WLSMV')
+fit_rmars_first <- cfa(rmars_first_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars_first, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_rmars_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 468.280* (249), CFI = .833, TLI = .815, RMSEA = .072 [90% CI = 0.062 - 0.082]).
-
+# Fit indices: (chisq.scaled = 1001.655* (249), CFI = .761, TLI = .735, RMSEA = .134 [90% CI = 0.125 - 0.142]).
 
 # (2) one-factor solution --------------------
 rmars_one_factor_model <- '
@@ -467,14 +460,13 @@ rmars_one =~ rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 +
     
     rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40' 
 
-fit_rmars_one <- cfa(rmars_one_factor_model, data = anxiety, estimator = 'WLSMV')
+fit_rmars_one <- cfa(rmars_one_factor_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars_one, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_rmars_one)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 913.632* (252), CFI = .496, TLI = .448, RMSEA = .125 [90% CI = 0.116 - 0.134]).
-
+# Fit indices: (chisq.scaled = 1910.457* (252), CFI = .474, TLI = .424, RMSEA = .197 [90% CI = 0.189 - 0.206]).
 
 # (3) second-order solution --------------------
 # second-order solution (including the 3 speciﬁc factors and a higher-order math anxiety factor)
@@ -490,14 +482,13 @@ num_task_anx =~ rmars_31 + rmars_32 + rmars_33 + rmars_34 + rmars_35 +
 math_class_anx =~ rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40
 ' 
 
-fit_rmars_second <- cfa(rmars_second_order_model, data = anxiety, estimator = 'WLSMV')
+fit_rmars_second <- cfa(rmars_second_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars_second, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_rmars_second)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 468.280* (249), CFI = .833, TLI = .815, RMSEA = .072 [90% CI = 0.062 - 0.082]).
-
+# Fit indices: (chisq.scaled = 1001.655* (249), CFI = .761, TLI = .735, RMSEA = .134 [90% CI = 0.125 - 0.142]).
 
 # (4) bifactor solution ---------------------------------------------------
 # (including the 3 speciﬁc factors and a co-existing math anxiety factor)
@@ -528,14 +519,13 @@ math_test_anx  ~~ 0*math_class_anx
 num_task_anx  ~~ 0*math_class_anx
 ' 
 
-fit_rmars_bifactor <- cfa(rmars_bifactor_model, data = anxiety, estimator = 'WLSMV')
+fit_rmars_bifactor <- cfa(rmars_bifactor_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars_bifactor, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_rmars_bifactor)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                       "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                       "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                       "srmr")], 3)
-# Fit indices: (chisq.scaled = 379.826* (228), CFI = .884, TLI = .860, RMSEA = .063 [90% CI = 0.052 - 0.062]).
-
+# Fit indices: (chisq.scaled = 540.307* (228), CFI = .901, TLI = .880, RMSEA = .090 [90% CI = 0.080 - 0.100]).
 
 # Sample size (169) is probably too small to reach acceptable level of goodness of fit indices (which are sensitive to sample size)
 # Myers et al. (2011): 
@@ -605,7 +595,6 @@ omega.task :=
 (et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8 + et9))
 
 
-
 math_class_anx =~ c1*rmars_36 + c2*rmars_37 + c3*rmars_38 + c4*rmars_39 + c5*rmars_40
 
 # Error Variance
@@ -624,17 +613,72 @@ omega.class :=
 
 
 
-# correlations
-math_test_anx ~~ num_task_anx
-math_test_anx ~~ math_class_anx
-num_task_anx ~~ math_class_anx
+math_anxiety =~ teg1*rmars_21 + teg2*rmars_22 + teg3*rmars_23 + teg4*rmars_24 +
+                teg5*rmars_25 + teg6*rmars_26 + teg7*rmars_27 + teg8*rmars_28 +
+                teg9*rmars_29 + teg10*rmars_30 + 
+                
+                tag1*rmars_31 + tag2*rmars_32 + tag3*rmars_33 + tag4*rmars_34 + 
+                tag5*rmars_35 + tag6*rmars_41 + tag7*rmars_42 + tag8*rmars_43 + tag9*rmars_44 +
+                
+                clg1*rmars_36 + clg2*rmars_37 + clg3*rmars_38 + clg4*rmars_39 + clg5*rmars_40
+
+# # Error Variance
+# rmars_21~~ea1*rmars_21
+# rmars_22~~ea2*rmars_22
+# rmars_23~~ea3*rmars_23
+# rmars_24~~ea4*rmars_24
+# rmars_25~~ea5*rmars_25
+# rmars_26~~ea6*rmars_26
+# rmars_27~~ea7*rmars_27
+# rmars_28~~ea8*rmars_28
+# rmars_29~~ea9*rmars_29
+# rmars_30~~ea10*rmars_30
+# 
+# rmars_31~~et1*rmars_31
+# rmars_32~~et2*rmars_32
+# rmars_33~~et3*rmars_33
+# rmars_34~~et4*rmars_34
+# rmars_35~~et5*rmars_35
+# rmars_41~~et6*rmars_41
+# rmars_42~~et7*rmars_42
+# rmars_43~~et8*rmars_43
+# rmars_44~~et9*rmars_44
+# 
+# rmars_36~~ec1*rmars_36
+# rmars_37~~ec2*rmars_37
+# rmars_38~~ec3*rmars_38
+# rmars_39~~ec4*rmars_39
+# rmars_40~~ec5*rmars_40
+
+
+#Reliability
+omega.all :=
+((teg1 + teg2 + teg3 + teg4 + teg5 + teg6 + teg7 + teg8 + teg9 + teg10 + 
+tag1 + tag2 + tag3 + tag4 + tag5 + tag6 + tag7 + tag8 + tag9 +  
+clg1 + clg2 + clg3 + clg4 + clg5)^2)
+/
+((teg1 + teg2 + teg3 + teg4 + teg5 + teg6 + teg7 + teg8 + teg9 + teg10 +
+tag1 + tag2 + tag3 + tag4 + tag5 + tag6 + tag7 + tag8 + tag9 + 
+clg1 + clg2 + clg3 + clg4 + clg5)^2 +
+(ea1 + ea2 + ea3 + ea4 + ea5 + ea6 + ea7 + ea8 + ea9 + ea10 +
+et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8 + et9 +
+ec1 + ec2 + ec3 + ec4 + ec5))
+
+
+# restrictions (uncorrelated factors)
+math_anxiety    ~~ 0*math_test_anx
+math_anxiety    ~~ 0*num_task_anx
+math_anxiety    ~~ 0*math_class_anx
+math_test_anx  ~~ 0*num_task_anx
+math_test_anx  ~~ 0*math_class_anx
+num_task_anx  ~~ 0*math_class_anx
 '
 
-fit_rmars <- cfa(rmars_corr_model_rel, data = anxiety, estimator = 'WLSMV', std.lv = TRUE)
+fit_rmars <- cfa(rmars_corr_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_rmars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.test = 0.923
-# omega.task = 0.925
-# omega.class = 0.853
+# omega.test = 0.927
+# omega.task = 0.908
+# omega.class = 0.857
 
 
 # 2.5 Statistics Anxiety Rating Scale (STARS; Cruise et al., 1985) -------
@@ -650,14 +694,13 @@ stars =~ stars_1 + stars_4 + stars_8 + stars_10 +
                   stars_17 + stars_18 + stars_20 +
          stars_3 + stars_16 + stars_19 + stars_23' 
 
-fit_stars_one <- cfa(stars_onemodel, data = anxiety, estimator = 'WLSMV')
+fit_stars_one <- cfa(stars_onemodel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars_one, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_stars_one)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                    "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                    "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                    "srmr")], 3)
-# Fit indices: (chisq.scaled = 1065.459* (230), CFI = .745, TLI = .719, RMSEA = .099 [90% CI = 0.093 - 0.105]).
-
+# Fit indices: (chisq.scaled = 1450.592* (230), CFI = .701, TLI = .672, RMSEA = .119 [90% CI = 0.114 - 0.125]).
 
 
 # (2) ﬁrst-order solution -------------------------------------------------
@@ -679,14 +722,13 @@ interpretation ~~ fear_of_asking
 ' 
 # In the three-factor CFA solution, items were set to load only on their a priori speciﬁc factors, cross-loadings were set to be zero, and factors were allowed to correlate with one another.
 
-fit_stars_first <- cfa(stars_first_order_model, data = anxiety, estimator = 'WLSMV')
+fit_stars_first <- cfa(stars_first_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars_first, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_stars_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                      "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                      "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                      "srmr")], 3)
-# Fit indices: (chisq.scaled = 494.814* (227), CFI = .918, TLI = .909, RMSEA = .056 [90% CI = 0.049 - 0.063]).
-
+# Fit indices: (chisq.scaled = 612.642* (227), CFI = .906, TLI = .895, RMSEA = .067 [90% CI = 0.061 - 0.074]).
 
 # (3) second-order solution -----------------------------------------------
 # (including the 3 speciﬁc factors and a higher-order stat anxiety factor)
@@ -704,14 +746,13 @@ interpretation =~ stars_2 + stars_5 + stars_6 + stars_7 +
 fear_of_asking =~ stars_3 + stars_16 + stars_19 + stars_23' 
 # In the second-order model, speciﬁcations were the same as in the ﬁrst-order model, but the correlations between the factors were replaced by a second-order global statistics anxiety factor.
 
-fit_stars_second <- cfa(stars_second_order_model, data = anxiety, estimator = 'WLSMV')
+fit_stars_second <- cfa(stars_second_order_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars_second, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_stars_second)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                       "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                       "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                       "srmr")], 3)
-# Fit indices: (chisq.scaled = 494.814* (227), CFI = .918, TLI = .909, RMSEA = .056 [90% CI = 0.049 - 0.063]).
-
+# Fit indices: (chisq.scaled = 612.642* (227), CFI = .906, TLI = .895, RMSEA = .067 [90% CI = 0.061 - 0.074]).
 
 # (4) bifactor solution ---------------------------------------------------
 # (including the 3 speciﬁc factors and a co-existing stat anxiety factor)
@@ -745,15 +786,30 @@ interpretation  ~~ 0*fear_of_asking
 # In bifactor-CFA solution, items were set to load on their respective S-factors as well as on the statistics anxiety G-factor, 
 # and following typical bifactor speciﬁcations (Reise, 2012) factors were speciﬁed as orthogonal (i.e., not allowed to correlate with one another).
 
-fit_stars_bifactor <- cfa(stars_bifactor_model, data = anxiety, estimator = 'WLSMV')
+fit_stars_bifactor <- cfa(stars_bifactor_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars_bifactor, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_stars_bifactor)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                         "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                         "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                         "srmr")], 3)
-# Fit indices: (chisq.scaled = 299.310* (207), CFI = .972, TLI = .966, RMSEA = .035 [90% CI = 0.026 - 0.043]).
+# Fit indices: (chisq.scaled = 363.429* (207), CFI = .962, TLI = .953, RMSEA = .045 [90% CI = 0.038 - 0.052]).
 
-anova(fit_stars_one, fit_stars_first, fit_stars_second, fit_stars_bifactor)
+anova(fit_stars_one, fit_stars_first, fit_stars_bifactor, scaled=TRUE)
+
+round(fitMeasures(fit_stars_one)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                        "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                        "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                        "srmr")], 4)
+round(fitMeasures(fit_stars_first)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                        "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                        "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                        "srmr")], 4)
+round(fitMeasures(fit_stars_bifactor)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                        "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                        "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                        "srmr")], 4)
+
+
 
 # 2.5.2 STARS composite reliability ---------------------------------------
 # calculating composite reliability, McDonald's omega for the bifactor model
@@ -891,12 +947,13 @@ test_and_class  ~~ 0*fear_of_asking
 interpretation  ~~ 0*fear_of_asking
 '
 
-fit_stars <- cfa(stars_bifact_model_rel, data = anxiety, estimator = 'WLSMV', std.lv = TRUE)
+fit_stars <- cfa(stars_bifact_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.test = 0.606
-# omega.interprt = 0.698
-# omega.fear = 0.836
-# omega.all = 0.943
+# omega.test = 0.703
+# omega.interprt = 0.573
+# omega.fear = 0.830
+# omega.all = 0.944
+
 round(fitMeasures(fit_stars)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                         "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                         "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
@@ -916,14 +973,15 @@ table(anxiety$stat_experience) # 125 vs 233
 # Testing measurement invariance for universities
 table(anxiety$university)
 
-config_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV')
-weak_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV', group.equal = "loadings")
-strong_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV', group.equal = c("loadings", "intercepts"))
-strict_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals"))
-latent_vc_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances"))
-mean_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances", "means"))
+config_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR')
+weak_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = "loadings")
+strong_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts"))
+strict_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals"))
+latent_vc_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances"))
+mean_uni <- cfa(stars_bifactor_model, data = anxiety, group = "university", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances", "means"))
 
-anova(config_uni, weak_uni, strong_uni, strict_uni, latent_vc_uni, mean_uni)
+
+anova(config_uni, weak_uni, strong_uni, strict_uni, latent_vc_uni, mean_uni, scaled=TRUE)
 
 fit.stats_uni <- rbind(fitmeasures(config_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
                        fitmeasures(weak_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
@@ -932,7 +990,7 @@ fit.stats_uni <- rbind(fitmeasures(config_uni, fit.measures = c("chisq.scaled", 
                        fitmeasures(latent_vc_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
                        fitmeasures(mean_uni, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")))
 rownames(fit.stats_uni) <- c("config", "weak", "strong", "strict", "latent_varcov", "latent_means")
-round(fit.stats_uni,3)
+round(fit.stats_uni,4)
 
 
 # Testing measurement invariance for stat experience
@@ -941,15 +999,14 @@ anxiety2 <- anxiety %>%
     filter(stat_experience %in% c("Experience with statistics", "No statistics experience"))
 table(anxiety2$stat_experience, useNA = "always")
 
+config_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR')
+weak_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR', group.equal = "loadings")
+strong_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR', group.equal = c("loadings", "intercepts"))
+strict_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals"))
+latent_vc_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances"))
+mean_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'MLR', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances", "means"))
 
-config_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV')
-weak_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV', group.equal = "loadings")
-strong_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV', group.equal = c("loadings", "intercepts"))
-strict_stat_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals"))
-latent_vc_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances"))
-mean_exp <- cfa(stars_bifactor_model, data = anxiety2, group = "stat_experience", estimator = 'WLSMV', group.equal = c("loadings", "intercepts", "residuals", "lv.variances", "lv.covariances", "means"))
-
-anova(config_stat_exp, weak_stat_exp, strong_stat_exp, strict_stat_exp, latent_vc_exp, mean_exp)
+anova(config_stat_exp, weak_stat_exp, strong_stat_exp, strict_stat_exp, latent_vc_exp, mean_exp, scaled=TRUE)
 
 fit.stats_stat <- rbind(fitmeasures(config_stat_exp, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
                         fitmeasures(weak_stat_exp, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
@@ -958,14 +1015,14 @@ fit.stats_stat <- rbind(fitmeasures(config_stat_exp, fit.measures = c("chisq.sca
                         fitmeasures(latent_vc_exp, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")),
                         fitmeasures(mean_exp, fit.measures = c("chisq.scaled", "pvalue.scaled", "df", "cfi.scaled", "tli.scaled", "rmsea.scaled", "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled")))
 rownames(fit.stats_stat) <- c("config", "weak", "strong", "strict", "latent_varcov", "latent_means")
-round(fit.stats_stat,3)
+round(fit.stats_stat,4)
 
 
 
+# 4. Correlations ---------------------------------------------------------
 
 # 4.1 Correlations of latent variables ------------------------------------
-
-# STARS bifactor, STICSA first-order, R-TAS first-order, BFNE-S one-factor
+# STARS bifactor, STICSA first-order, R-TAS first-order, BFNE-S one-factor, grade, CRT
 
 sem_model <- '
 test_and_class =~ stars_1 + stars_4 + stars_8 + stars_10 + 
@@ -1024,6 +1081,22 @@ irrelevant ~~ bodily
 bfnes =~ bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8
 
 
+# # R-MARS
+# math_test_anx =~ rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 +
+#     rmars_26 + rmars_27 + rmars_28 + rmars_29 + rmars_30
+# 
+# num_task_anx =~ rmars_31 + rmars_32 + rmars_33 + rmars_34 + rmars_35 +
+#     rmars_41 + rmars_42 + rmars_43 + rmars_44
+# 
+# math_class_anx =~ rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40
+# 
+# 
+# math_test_anx ~~ num_task_anx
+# math_test_anx ~~ math_class_anx
+# num_task_anx ~~ math_class_anx
+
+
+
 # Correlations between measures
 stat_anxiety ~~ somatic
 stat_anxiety ~~ cognitive
@@ -1032,6 +1105,11 @@ stat_anxiety ~~ tension
 stat_anxiety ~~ irrelevant
 stat_anxiety ~~ bodily
 stat_anxiety ~~ bfnes
+stat_anxiety ~~ grade
+stat_anxiety ~~ crt_sum_correct
+# stat_anxiety ~~ math_test_anx
+# stat_anxiety ~~ num_task_anx
+# stat_anxiety ~~ math_class_anx
 
 test_and_class ~~ somatic
 test_and_class ~~ cognitive
@@ -1040,6 +1118,11 @@ test_and_class ~~ tension
 test_and_class ~~ irrelevant
 test_and_class ~~ bodily
 test_and_class ~~ bfnes
+test_and_class ~~ grade
+test_and_class ~~ crt_sum_correct
+# test_and_class ~~ math_test_anx
+# test_and_class ~~ num_task_anx
+# test_and_class ~~ math_class_anx
 
 interpretation ~~ somatic
 interpretation ~~ cognitive
@@ -1048,6 +1131,11 @@ interpretation ~~ tension
 interpretation ~~ irrelevant
 interpretation ~~ bodily
 interpretation ~~ bfnes
+interpretation ~~ grade
+interpretation ~~ crt_sum_correct
+# interpretation ~~ math_test_anx
+# interpretation ~~ num_task_anx
+# interpretation ~~ math_class_anx
 
 fear_of_asking ~~ somatic
 fear_of_asking ~~ cognitive
@@ -1056,33 +1144,83 @@ fear_of_asking ~~ tension
 fear_of_asking ~~ irrelevant
 fear_of_asking ~~ bodily
 fear_of_asking ~~ bfnes
+fear_of_asking ~~ grade
+fear_of_asking ~~ crt_sum_correct
+# fear_of_asking ~~ math_test_anx
+# fear_of_asking ~~ num_task_anx
+# fear_of_asking ~~ math_class_anx
 
 somatic ~~ worry
 somatic ~~ tension
 somatic ~~ irrelevant
 somatic ~~ bodily
 somatic ~~ bfnes
+somatic ~~ grade
+somatic ~~ crt_sum_correct
+# somatic ~~ math_test_anx
+# somatic ~~ num_task_anx
+# somatic ~~ math_class_anx
 
 cognitive ~~ worry
 cognitive ~~ tension
 cognitive ~~ irrelevant
 cognitive ~~ bodily
 cognitive ~~ bfnes
+cognitive ~~ grade
+cognitive ~~ crt_sum_correct
+# cognitive ~~ math_test_anx
+# cognitive ~~ num_task_anx
+# cognitive ~~ math_class_anx
 
 worry ~~ bfnes
+worry ~~ grade
+worry ~~ crt_sum_correct
+# worry ~~ math_test_anx
+# worry ~~ num_task_anx
+# worry ~~ math_class_anx
 tension ~~ bfnes
+tension ~~ grade
+tension ~~ crt_sum_correct
+# tension ~~ math_test_anx
+# tension ~~ num_task_anx
+# tension ~~ math_class_anx
 irrelevant ~~ bfnes
+irrelevant ~~ grade
+irrelevant ~~ crt_sum_correct
+# irrelevant ~~ math_test_anx
+# irrelevant ~~ num_task_anx
+# irrelevant ~~ math_class_anx
 bodily ~~ bfnes
+bodily ~~ grade
+bodily ~~ crt_sum_correct
+# bodily ~~ math_test_anx
+# bodily ~~ num_task_anx
+# bodily ~~ math_class_anx
 
+bfnes ~~ grade
+bfnes ~~ crt_sum_correct
+# bfnes ~~ math_test_anx
+# bfnes ~~ num_task_anx
+# bfnes ~~ math_class_anx
+
+grade ~~ crt_sum_correct
+# grade ~~ math_test_anx
+# grade ~~ num_task_anx
+# grade ~~ math_class_anx
+
+# crt_sum_correct ~~ math_test_anx
+# crt_sum_correct ~~ num_task_anx
+# crt_sum_correct ~~ math_class_anx
 '
 
-fit_stars_sem <- cfa(sem_model, data = anxiety, estimator = 'WLSMV')
+
+fit_stars_sem <- cfa(sem_model, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars_sem, fit.measures = TRUE, standardized = TRUE)
 round(fitMeasures(fit_stars_sem)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
-                                        "cfi.scaled", "tli.scaled", "rmsea.scaled", 
-                                        "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
-                                        "srmr")], 3)
-# Fit indices: (chisq.scaled = 2784.689* (2412), CFI = .964, TLI = .962, RMSEA = .021 [90% CI = 0.017 - 0.024]).
+                                   "cfi.scaled", "tli.scaled", "rmsea.scaled", 
+                                   "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
+                                   "srmr")], 3)
+# Fit indices: (chisq.scaled = 3696.046* (2534), CFI = .898, TLI = .892, RMSEA = .039 [90% CI = 0.036 - 0.042]).
 
 
 
@@ -1091,7 +1229,7 @@ round(fitMeasures(fit_stars_sem)[c("npar", "chisq.scaled", "df.scaled", "pvalue.
 # Preparation for correlation table
 
 # calculating measured variables
-anxiety <- anxiety %>%
+anxiety2 <- anxiety %>%
     mutate(somatic = (sticsa_1 + sticsa_2 + sticsa_6 + sticsa_7 + sticsa_8 + 
                           sticsa_12 + sticsa_14 + sticsa_15 + sticsa_18 + sticsa_20 + sticsa_21)/11, 
            cognitive = (sticsa_3 + sticsa_4 + sticsa_5 + sticsa_9 + sticsa_10 + 
@@ -1101,6 +1239,11 @@ anxiety <- anxiety %>%
            irrelevant = (rtas_7 + rtas_9 + rtas_15 + rtas_16)/4,
            bodily = (rtas_10 + rtas_17 + rtas_18 + rtas_21 + rtas_22)/5,
            bfnes = (bfne_1 + bfne_2 + bfne_3 + bfne_4 + bfne_5 + bfne_6 + bfne_7 + bfne_8)/8,
+           rmars = (rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 + 
+                        rmars_26 + rmars_27 + rmars_28 + rmars_29 + rmars_30 + 
+                        rmars_31 + rmars_32 + rmars_33 + rmars_34 + rmars_35 + 
+                        rmars_36 + rmars_37 + rmars_38 + rmars_39 + rmars_40 + 
+                        rmars_41 + rmars_42 + rmars_43 + rmars_44)/24,
            math_test_anx = (rmars_21 + rmars_22 + rmars_23 + rmars_24 + rmars_25 + 
                                 rmars_26 + rmars_27 + rmars_28 + rmars_29 + rmars_30)/10,
            num_task_anx = (rmars_31 + rmars_32 + rmars_33 + rmars_34 + rmars_35 + 
@@ -1114,29 +1257,36 @@ anxiety <- anxiety %>%
            fear_of_asking = (stars_3 + stars_16 + stars_19 + stars_23)/4)
     
 # check variables normality
-shapiro.test(anxiety$somatic)
-shapiro.test(anxiety$cognitive)
-shapiro.test(anxiety$worry)
-shapiro.test(anxiety$tension)
-shapiro.test(anxiety$irrelevant)
-shapiro.test(anxiety$bodily)
-shapiro.test(anxiety$bfnes)
-shapiro.test(anxiety$math_test_anx)
-shapiro.test(anxiety$num_task_anx)
-shapiro.test(anxiety$math_class_anx)
-shapiro.test(anxiety$test_and_class)
-shapiro.test(anxiety$interpretation)
-shapiro.test(anxiety$fear_of_asking)
+shapiro.test(anxiety2$somatic)
+shapiro.test(anxiety2$cognitive)
+shapiro.test(anxiety2$worry)
+shapiro.test(anxiety2$tension)
+shapiro.test(anxiety2$irrelevant)
+shapiro.test(anxiety2$bodily)
+shapiro.test(anxiety2$bfnes)
+shapiro.test(anxiety2$math_test_anx)
+shapiro.test(anxiety2$num_task_anx)
+shapiro.test(anxiety2$math_class_anx)
+shapiro.test(anxiety2$test_and_class)
+shapiro.test(anxiety2$interpretation)
+shapiro.test(anxiety2$fear_of_asking)
 
 # significant Shapiro-Wilk normality tests --> Spearman correlations are necessary
+
+# corr_input <- c("rmars_21", "rmars_22", "rmars_23", "rmars_24", "rmars_25",
+#                 "rmars_26", "rmars_27", "rmars_28", "rmars_29", "rmars_30",
+#                 "rmars_31", "rmars_32", "rmars_33", "rmars_34", "rmars_35",
+#                 "rmars_41", "rmars_42", "rmars_43", "rmars_44",
+#                 "rmars_36", "rmars_37", "rmars_38", "rmars_39", "rmars_40")
 
 corr_input <- c("test_and_class", "interpretation", "fear_of_asking",
                 "somatic", "cognitive",
                 "worry", "tension", "irrelevant", "bodily",
                 "bfnes",
-                "math_test_anx", "num_task_anx", "math_class_anx")
+                "math_test_anx", "num_task_anx", "math_class_anx",
+                "grade", "crt_sum_correct")
 
-corr_table <- anxiety %>% 
+corr_table <- anxiety2 %>% 
     select(., one_of(corr_input))
 
 # function to create Spearman corr table with stars indicating significance levels
@@ -1156,7 +1306,7 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
     mystars <- ifelse(p < .01, "** ", ifelse(p < .05, "*  ", "   "))
     
     ## trunctuate the correlation matrix to two decimal
-    R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
+    R <- format(round(cbind(rep(-1.11, ncol(x)), R), 3))[,-1]
     
     ## build a new matrix that includes the correlations with their appropriate stars
     Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
@@ -1187,10 +1337,9 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
     }
 } 
 
+
+# 4.2.1 Correlations of measured variables - all  -------------------------
+
 # Calculating correlations and creating correlation matrix
 correlation_table <- corstars(corr_table, method = "spearman")
-
-
-
-
 
