@@ -834,11 +834,7 @@ stars_21~~et7*stars_21
 stars_22~~et8*stars_22
 
 #Reliability
-omega.test :=
-((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2)
-/
-((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2 +
-(et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8))
+omega.test := ((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2) / ((t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8)^2 + (et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8))
 
 
 
@@ -860,11 +856,10 @@ stars_18~~ei10*stars_18
 stars_20~~ei11*stars_20
 
 #Reliability
-omega.interpret :=
-((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2)
-/
-((i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2 +
-(ei1 + ei2 + ei3 + ei4 + ei5 + ei6 + ei7 + ei8 + ei9 + ei10 + ei11))
+omega.interpret := ((i1 + i2 + i3 + i4 + i5 + 
+i6 + i7 + i8 + i9 + i10 + i11)^2) / ((i1 + i2 + i3 + 
+i4 + i5 + i6 + i7 + i8 + i9 + i10 + i11)^2 + (ei1 + ei2 + 
+ei3 + ei4 + ei5 + ei6 + ei7 + ei8 + ei9 + ei10 + ei11))
 
 
 
@@ -877,12 +872,7 @@ stars_19~~ef3*stars_19
 stars_23~~ef4*stars_23
 
 #Reliability
-omega.fear :=
-((f1 + f2 + f3 + f4)^2)
-/
-((f1 + f2 + f3 + f4)^2 +
-(ef1 + ef2 + ef3 + ef4))
-
+omega.fear := ((f1 + f2 + f3 + f4)^2) / ((f1 + f2 + f3 + f4)^2 + (ef1 + ef2 + ef3 + ef4))
 
 
 stat_anxiety =~ tg1*stars_1 + tg2*stars_4 + tg3*stars_8 + tg4*stars_10 +
@@ -922,20 +912,15 @@ stat_anxiety =~ tg1*stars_1 + tg2*stars_4 + tg3*stars_8 + tg4*stars_10 +
 
 
 #Reliability
-omega.all :=
-((tg1 + tg2 + tg3 + tg4 + tg5 + tg6 + tg7 + tg8 + 
+omega.all := ((tg1 + tg2 + tg3 + tg4 + tg5 + tg6 + tg7 + tg8 + 
 ig1 + ig2 + ig3 + ig4 + ig5 + ig6 + ig7 + ig8 + ig9 + ig10 + ig11 + 
-fg1 + fg2 + fg3 + fg4)^2)
-/
-((tg1 + tg2 + tg3 + tg4 + tg5 + tg6 + tg7 + tg8 + 
+fg1 + fg2 + fg3 + fg4)^2) / ((tg1 + tg2 + tg3 + tg4 + tg5 + 
+tg6 + tg7 + tg8 + 
 ig1 + ig2 + ig3 + ig4 + ig5 + ig6 + ig7 + ig8 + ig9 + ig10 + ig11 + 
-fg1 + fg2 + fg3 + fg4)^2 +
-(et1 + et2 + et3 + et4 + et5 + et6 + et7 + et8 + 
+fg1 + fg2 + fg3 + fg4)^2 + (et1 + et2 + et3 + et4 + et5 + 
+et6 + et7 + et8 + 
 ei1 + ei2 + ei3 + ei4 + ei5 + ei6 + ei7 + ei8 + ei9 + ei10 + ei11 + 
 ef1 + ef2 + ef3 + ef4))
-# (etg1 + etg2 + etg3 + etg4 + etg5 + etg6 + etg7 + etg8 + 
-# eig1 + eig2 + eig3 + eig4 + eig5 + eig6 + eig7 + eig8 + eig9 + eig10 + eig11 + 
-# efg1 + efg2 + efg3 + efg4))
 
 
 # restrictions (uncorrelated factors)
@@ -949,15 +934,33 @@ interpretation  ~~ 0*fear_of_asking
 
 fit_stars <- cfa(stars_bifact_model_rel, data = anxiety, estimator = 'MLR', std.lv = TRUE)
 summary(fit_stars, fit.measures = TRUE, standardized = TRUE, rsquare=T)
-# omega.test = 0.703
-# omega.interprt = 0.573
-# omega.fear = 0.830
+# omega.test = 0.699
+# omega.interprt = 0.554
+# omega.fear = 0.843
 # omega.all = 0.944
 
 round(fitMeasures(fit_stars)[c("npar", "chisq.scaled", "df.scaled", "pvalue.scaled",
                                         "cfi.scaled", "tli.scaled", "rmsea.scaled", 
                                         "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                         "srmr")], 3)
+
+# Fit with bootstrap SEs
+set.seed(1)  # for reproducibility
+fit_stars <- cfa(
+    stars_bifact_model_rel,
+    data = anxiety,
+    estimator = "ML",           
+    std.lv   = TRUE,             
+    se       = "bootstrap",      
+    bootstrap = 2000,            
+    test     = "bootstrap")
+
+# Extract the ω estimates with CIs
+pe <- parameterEstimates(fit_stars, ci = TRUE, boot.ci.type = "bca.simple")
+
+# ω’s are the defined parameters (op == ":="). Pull label, est, CI:
+omega_ci <- subset(pe, op == ":=")[, c("label","est","ci.lower","ci.upper")]
+omega_ci
 
 
 # 3. Measurement Invariance Testing ---------------------------------------
@@ -1221,6 +1224,45 @@ round(fitMeasures(fit_stars_sem)[c("npar", "chisq.scaled", "df.scaled", "pvalue.
                                    "rmsea.ci.lower.scaled", "rmsea.ci.upper.scaled", 
                                    "srmr")], 3)
 # Fit indices: (chisq.scaled = 3696.046* (2534), CFI = .898, TLI = .892, RMSEA = .039 [90% CI = 0.036 - 0.042]).
+
+
+# 4.1.1 SEM with Spearman correlations ------------------------------------
+vars_in_model <- c(
+    # STARS
+    paste0("stars_", 1:23),
+    
+    # STICSA
+    paste0("sticsa_", 1:21),
+    
+    # R-TAS
+    paste0("rtas_", c(1:11, 13, 15:18, 21, 22, 24, 25)),
+    
+    # BFNE-S
+    paste0("bfne_", 1:8),
+    
+    # grade + CRT
+    "grade",
+    "crt_sum_correct"
+)
+
+anxiety_sub <- anxiety[, vars_in_model]
+
+cors_spearman <- cor(
+    anxiety_sub,
+    use   = "pairwise.complete.obs",
+    method = "spearman"
+)
+
+
+fit_stars_sem_spear <- cfa(
+    sem_model,
+    sample.cov  = cors_spearman,
+    sample.nobs = nrow(anxiety_sub),
+    std.lv      = TRUE,
+    estimator   = "ML"
+)
+
+summary(fit_stars_sem_spear, fit.measures = TRUE, standardized = TRUE)
 
 
 
